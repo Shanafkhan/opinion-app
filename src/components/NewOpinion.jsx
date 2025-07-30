@@ -1,10 +1,12 @@
-import { useActionState } from "react";
+import { useActionState , use} from "react";
+import { OpinionsContext } from "../store/opinions-context";
+import Submit from "./Submit";
 export function NewOpinion() {
-
-  function submitAction(prevForsmState, formData) {
+  const {addOpinion} = use(OpinionsContext);
+  async function submitAction(prevForsmState, formData) {
     const userName = formData.get("userName");
     const title = formData.get("title");
-    const opinion = formData.get("body");
+    const body = formData.get("body");
     //define array to push the errors
     let errors = [];
 
@@ -16,7 +18,7 @@ export function NewOpinion() {
       errors.push("Please enter the proper email");
     }
 
-    if (opinion.trim().length < 10 || opinion.trim().length > 300) {
+    if (body.trim().length < 10 || body.trim().length > 300) {
       errors.push(
         "Please enter the opinion which has the charachters between 10 and 300"
       );
@@ -28,10 +30,12 @@ export function NewOpinion() {
         enteredValues: {
           userName,
           title,
-          opinion,
+          body,
         },
       };
     }
+
+    await addOpinion({title,userName,body})
     return { errors: null };
   }
 
@@ -53,7 +57,7 @@ export function NewOpinion() {
         </div>
         <p className="control">
           <label htmlFor="body">Your Opinion</label>
-          <textarea id="body" name="body" rows={5} defaultValue={formState.enteredValues?.opinion}></textarea>
+          <textarea id="body" name="body" rows={5} defaultValue={formState.enteredValues?.body}></textarea>
         </p>
 
         {
@@ -65,10 +69,7 @@ export function NewOpinion() {
             </ul>
           )
         }
-
-        <p className="actions">
-          <button type="submit">Submit</button>
-        </p>
+        <Submit />
       </form>
     </div>
   );
