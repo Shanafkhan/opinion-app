@@ -1,22 +1,22 @@
 import { useActionState } from "react";
 export function NewOpinion() {
 
-  function submitAction(formData) {
+  function submitAction(prevForsmState, formData) {
     const userName = formData.get("userName");
     const title = formData.get("title");
-    const opinion = formData.get("opinion");
+    const opinion = formData.get("body");
     //define array to push the errors
     let errors = [];
 
-    if (!userName.trim().length === 0) {
+    if (userName.trim().length === 0) {
       errors.push("Please enter the valid userName");
     }
 
-    if (!title.trim().length < 5) {
+    if (title.trim().length < 5) {
       errors.push("Please enter the proper email");
     }
 
-    if (!opinion.trim().length < 10 && !opinion.trim().length > 300) {
+    if (opinion.trim().length < 10 || opinion.trim().length > 300) {
       errors.push(
         "Please enter the opinion which has the charachters between 10 and 300"
       );
@@ -37,9 +37,9 @@ export function NewOpinion() {
 
  const [formState, formAction] = useActionState(submitAction , {errors:null})
   return (
-    <div id="new-opinion" action={formAction}>
+    <div id="new-opinion" >
       <h2>Share your opinion!</h2>
-      <form>
+      <form action={formAction}>
         <div className="control-row">
           <p className="control">
             <label htmlFor="userName">Your Name</label>
